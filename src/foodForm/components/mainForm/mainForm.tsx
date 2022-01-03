@@ -4,8 +4,8 @@ import 'antd/dist/antd.css';
 import './mainForm.css';
 import {useState} from "react";
 import {useValidateForm} from "../../hooks/useValidateForm/useValidateForm";
-
-const { Option } = Select;
+import {SelectForm} from "../selectForm/selectForm";
+import {InputForm} from "../inputForm/inputForm";
 
 type FormData = {
     type: string;
@@ -21,7 +21,9 @@ export const MainForm = () => {
     const { validateForm } = useValidateForm(firstValue,secondValue);
 
     const onSubmit = (data : FormData) => {
+        console.log('data',data);
         setEditMode(false);
+        alert('sukces');
     }
 
     const onEdit = () => {
@@ -38,18 +40,15 @@ export const MainForm = () => {
                         defaultValue=""
                         rules={{ required: 'To pole jest wymagane',validate: validateForm}}
                         render={({ field: { onChange } }) =>
-                            <Form.Item label="Food Category" validateStatus={errors.type ? "error" : "validating"} help={errors.type && errors.type.message}>
-                                <Select style={{width:'4rem'}} disabled={!editMode}
-                                        onChange={(e) => {
-                                            console.log('e',e);
-                                            onChange(e);
-                                            setFirstValue(e);
-                                        }}>
-                                    <Option value="A">A</Option>
-                                    <Option value="B">B</Option>
-                                    <Option value="C">C</Option>
-                                </Select>
-                            </Form.Item>
+                            <SelectForm
+                                label="Food Type"
+                                errors={errors}
+                                editMode={editMode}
+                                onChange={onChange}
+                                options={['A','B','C']}
+                                setFirstValue={setFirstValue}
+                            />
+
                         }
                     />
                     <Controller
@@ -57,15 +56,12 @@ export const MainForm = () => {
                         control={control}
                         defaultValue=""
                         render={({ field: { onChange } }) =>
-                            <Form.Item label="Food Name">
-                                <Input
-                                    disabled={!editMode}
-                                    onChange={(e) => {
-                                        onChange(e.target.value);
-                                        setSecondValue(e.target.value);
-                                    }}
-                                />
-                            </Form.Item>
+                            <InputForm
+                                label="Food Name"
+                                editMode={editMode}
+                                onChange={onChange}
+                                setSecondValue={setSecondValue}
+                            />
                         }
                     />
                     <Controller
@@ -74,12 +70,12 @@ export const MainForm = () => {
                         defaultValue=""
                         rules={{ required: 'To pole jest wymagane' }}
                         render={({ field: { onChange } }) =>
-                            <Form.Item label="Food Description" validateStatus={errors.description ? "error" : "validating"} help={errors.description && errors.description.message}>
-                                <Input
-                                    disabled={!editMode}
-                                    onChange={onChange}
-                                />
-                            </Form.Item>
+                            <InputForm
+                                label="Food Description"
+                                errors={errors}
+                                editMode={editMode}
+                                onChange={onChange}
+                            />
 
                         }
                     />
